@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Master</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+  <script src="../public/app.js" defer></script>
+  <style>
+    /* General styling */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: row;
+  }
+
+  /* Header styling */
+  header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-align: left;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header h1 {
+    margin: 0;
+  }
+h2{
+    margin-left: 2rem;
+}
+
+  /* Sidebar styling */
+  .sidebar {
+    background-color: #f4f4f4;
+    padding: 20px;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    top: 60px; /* Below header */
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+  .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+    .sidebar ul li a {
+      color: black;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar ul li a i {
+      margin-right: 10px;
+    }
+
+  .sidebar a:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+  }
+
+  /* Main content */
+  .content {
+    margin-left: 220px;
+    padding: 20px;
+    margin-top: 80px; /* Below header */
+  }
+
+  .content h2 {
+    margin-bottom: 20px;
+  }
+
+  .box {
+    width: 150%;
+    display: flex;
+    gap: 0px;
+  }
+
+  .box .card {
+    flex: 1;
+    padding: 20px;
+
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    margin-left: 2rem;
+  }
+    /*Search*/
+    input{
+    margin-bottom: 20px; 
+    padding: 10px; 
+    width: 60%; 
+    margin-left: 2rem;
+    }
+    #filterPriority{
+     width: 20%; 
+     height: 6vh;
+    }
+ 
+  .inpt{
+    margin-bottom: 20px; 
+    padding: 10px; 
+    width: 100%; 
+    margin-left: 2rem;
+  }
+  .btn{
+    padding: 10px 20px; 
+    margin-bottom: 20px; 
+    margin-left: 2rem;
+    border: none;
+  }
+
+  /* Table styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 2rem;
+  }
+
+  table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+
+  table th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Modal styling */
+  .modal {
+    width: 50%;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1001;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+  }
+
+  .modal-body input {
+    display: block;
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .modal-body button {
+    width: 80%;
+  }
+
+  .modal-footer {
+    text-align: right;
+  }
+
+  .modal-footer button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .modal-footer .close-btn {
+    background-color: #ddd;
+  }
+
+  .modal-footer .save-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Task Master</h1>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <ul>
+      <li><a href="#dashboard" id="dashboardLink"><i  class="fas fa-tachometer"></i>Dashboard</a></li>
+    <li><a href="#tasks" id="tasksLink"><i class="fas fa-tasks"></i>Tasks</a></li>
+    <li><a href="#users" id="usersLink"><i class="fas fa-users"></i>Users</a></li>
+    <li><a href="login.html" id="logoutLink"><i class="fas fa-sign-out-alt"></i>Logout</a></li> 
+  </div>
+    </ul>
+
+  <!-- Main Content -->
+  <div class="content" id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="box">
+      <div class="card" id="availableTasks">Low Tasks: 0</div>
+      <div class="card" id="pendingTasks">Medium Tasks: 0</div>
+      <div class="card" id="completedTasks">High Tasks: 0</div>
+    </div>
+  </div>
+  <div class="content" id="tasks" style="display: none;">
+    <h2>Tasks</h2>
+        <!-- Search and Filter -->
+        <section id="search-filter-section">
+          <h2>Search and Filter Tasks</h2>
+          <input type="text" id="search" placeholder="Search tasks...">
+          <select id="filterPriority">
+            <option value="">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+
+    <button id="addTaskBtn" class="btn">Add New Task</button>
+
+    <table id="taskTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tasks will be added here dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="taskModal">
+    <div class="modal-header">
+      <h3>Add Task</h3>
+      <button class="close-btn" id="closeModal">X</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="taskTitle" placeholder="Task Title">
+      <input type="text" id="taskDescription" placeholder="Task Description">
+      <input type="date" id="taskDeadline" >
+      <select id="taskPriority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="close-btn" id="cancelModal">Cancel</button>
+      <button class="save-btn" id="saveTask" type="submit">Add Task</button>
+    </div>
+  </div>
+   <!-- Users Table -->
+    <div class="content" id="users" style="display: none;">
+        <h2>Users</h2>
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Users will be dynamically inserted here -->
+          </tbody>
+        </table>
+    </div>
+  
+
+  <script>
+    // JavaScript for navigation
+    document.getElementById('dashboardLink').addEventListener('click', () => {
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('tasks').style.display = 'none';
+      document.getElementById('users').style.display = 'none';
+      document.getElementById('logout').style.display = 'none';
+    });
+
+    document.getElementById('tasksLink').addEventListener('click', () => {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('tasks').style.display = 'block';
+      document.getElementById('users').style.display = 'none';
+      document.getElementById('logout').style.display = 'none';
+    });
+
+    document.getElementById('usersLink').addEventListener('click', () => {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('tasks').style.display = 'none';
+      document.getElementById('users').style.display = 'block';
+      document.getElementById('logout').style.display = 'none';
+    });
+      
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('tasks').style.display = 'none';
+      document.getElementById('users').style.display = 'none';
+      document.getElementById('logout').style.display = 'block';
+    });
+
+    // JavaScript for modal
+    const taskModal = document.getElementById('taskModal');
+    document.getElementById('addTaskBtn').addEventListener('click', () => {
+      taskModal.style.display = 'block';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      taskModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelModal').addEventListener('click', () => {
+      taskModal.style.display = 'none';
+    });
+
+    document.getElementById('saveTask').addEventListener('click', () => {
+      const taskName = document.getElementById('taskName').value;
+      const taskStatus = document.getElementById('taskStatus').value;
+
+      if (taskName && taskStatus) {
+        const tasksTable = document.getElementById('tasksTable').getElementsByTagName('tbody')[0];
+        const newRow = tasksTable.insertRow();
+        newRow.innerHTML = `
+          <td>${taskName}</td>
+          <td>${taskStatus}</td>
+          <td>
+            <button>Update</button>
+            <button>Delete</button>
+          </td>
+        `;
+
+        taskModal.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
